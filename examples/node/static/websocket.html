@@ -1,0 +1,66 @@
+<html>
+<header><title>This is Skynet websocket</title></header>
+
+<body>
+    <script>
+    var Utf8ArrayToStr = function(array) {
+            var out, i, len, c;
+            var char2, char3,char4;
+
+            out = "";
+            len = array.length;
+            i = 0;
+            while(i < len) {
+                c = array[i++];
+                var pre = (c >> 3);
+                if(pre >=0 && pre <= 15){// 0xxxxxxx
+                    out += String.fromCharCode(c);
+                }else if(pre >=24 && pre <= 27){// 110x xxxx   10xx xxxx
+                    char2 = array[i++];
+                    out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
+                }else if(pre >= 28 && pre <= 29){// 1110 xxxx  10xx xxxx  10xx xxxx
+                    char2 = array[i++];
+                    char3 = array[i++];
+                    out += String.fromCharCode(((c & 0x0F) << 12) |
+                           ((char2 & 0x3F) << 6) |
+                           ((char3 & 0x3F) << 0));
+                }else if(pre == 30){//1111 0xxx  10xx xxxx  10xx xxxx 10xx xxxx
+                    char2 = array[i++];
+                    char3 = array[i++];
+                    char4 = array[i++];
+                    out += String.fromCodePoint(
+                            ((c & 0x07) << 15) |
+                           ((char2 & 0x3F) << 12) |
+                           ((char3 & 0x3F) << 6) |
+                           ((char4 & 0x3F) << 0));              
+                }
+            }
+
+        return out;
+        };
+        var WebSocket = WebSocket || window.WebSocket || window.MozWebSocket; 
+        var host = location.host;
+        host = host.substr(0, host.indexOf(":"));
+        var WS_URL = "ws://" + host + ":8001/ws";
+        var ws = new WebSocket(WS_URL)
+        ws.binaryType = "arraybuffer";
+        ws.onopen = function () {
+            ws.send("hello skynet WebSocket\n");
+            ws.send("close");
+        }
+        ws.onmessage = function (event) {
+            var data = event.data;
+            var uint8Array = new Uint8Array(data);
+            var str = Utf8ArrayToStr(uint8Array);
+            console.log(str);
+        }
+        ws.onclose = function () {
+        }
+        ws.onerror = function (err) {
+            console.log("onerror " + WS_URL);
+        }
+
+    </script>
+
+</body>
+</html>
