@@ -21,7 +21,10 @@ function root.call_dir_multi(dirname, name, msg)
             end
         end)
     end
-    skynet.wait()
+
+    if #server_list ~= 0 then
+        skynet.wait()
+    end
     return result_list
 end
 
@@ -45,7 +48,10 @@ function root.call_multi(call_list)
     for k, v in ipairs(call_list) do 
         skynet.fork(__call(k, v))      
     end
-    skynet.wait()
+
+    if #call_list ~= 0 then
+        skynet.wait()
+    end
     return result_list
 end
 
