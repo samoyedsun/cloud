@@ -72,9 +72,9 @@ local function request(url, get, post, no_reply)
             k = webclient:url_encoding(k)
             v = webclient:url_encoding(v)
 
-            table.insert(data, string.format("%s=%s", k, v))
+            data[k] = v
         end   
-        post = table.concat(data , "&")
+        post = cjson_encode(data)
     end   
 
     local req, key = webclient:request(url, post)
