@@ -69,8 +69,20 @@ local function request(url, get, post, header, no_reply)
     if post and type(post) == "table" then
         local data = {}
         for k,v in pairs(post) do
-            k = webclient:url_encoding(k)
-            v = webclient:url_encoding(v)
+            local k = webclient:url_encoding(k)
+            if type(v) == "table" then
+                local pv = v
+                local pd = {}
+                for k1,v1 in pairs(pv) do
+                    local k1 = webclient:url_encoding(k1)
+                    local v1 = webclient:url_encoding(v1)
+                    
+                    pd[k1] = v1
+                end
+                v = pd
+            else
+                v = webclient:url_encoding(v)
+            end
 
             data[k] = v
         end   
