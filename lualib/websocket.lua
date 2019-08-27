@@ -296,7 +296,7 @@ function wslib:start()
     while true do
         local succ, message = self:recv()
         if not succ then
-            self.handler.on_error(self)
+            self.handler.on_error(self, message)
             self:close()
             break
         end
