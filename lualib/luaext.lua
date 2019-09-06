@@ -185,14 +185,15 @@ do
 end
 
 function string.split(str, delimiter)
-    if str==nil or str=='' or delimiter==nil then
-        return nil
+    str = tostring(str)
+    delimiter = tostring(delimiter)
+    if (delimiter=='') then return {} end
+    local pos, result = 0, {}
+    for st,sp in function() return string.find(str, delimiter, pos, true) end do
+        table.insert(result, string.sub(str, pos, st - 1))
+        pos = sp + 1
     end
-    
-    local result = {}
-    for match in (str..delimiter):gmatch("(.-)"..delimiter) do
-        table.insert(result, match)
-    end
+    table.insert(result, string.sub(str, pos))
     return result
 end
 

@@ -176,6 +176,16 @@ function time_now_str()
     return os.date("%Y-%m-%d %H:%M:%S", skynet_time())
 end
 
+function time_now_utc_str()
+	local t = skynet.time()
+	ts = string.format("%0.1f", t)
+	t = string.split(ts, ".")[1]
+	f = string.split(ts, ".")[2]
+	t = os.date("!*t", tonumber(t))
+	t = os.time({year=t.year, month=t.month, day=t.day, hour=t.hour, min=t.min ,sec=t.sec})
+	return os.date("%Y-%m-%d", t) .. "T" .. os.date("%H:%M:%S", t) .. "." .. f .. "Z"
+end
+
 function is_robot(uid)
     return tonumber(uid) < 1000000
 end
