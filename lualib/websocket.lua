@@ -2,6 +2,7 @@
 -- Modified by korialuo. "https://github.com/korialuo/skynet/blob/master/lualib/websocket.lua"
 -- This file is modified version from from "https://github.com/Skycrab/skynet_websocket"
 
+local skynet = require "skynet"
 local crypt = require "skynet.crypt"
 local socket = require "skynet.socket"
 local httpd = require "http.httpd"
