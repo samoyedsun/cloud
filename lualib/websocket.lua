@@ -260,22 +260,22 @@ function wslib:close(code, reason)
         if reason ~= nil then
             data = data .. reason
         end
-        local bt = skynet.time()
+        local bt = skynet_time()
         self:send_frame(true, 0x8, data)
-        local et = skynet.time()
+        local et = skynet_time()
         if (et - bt) > 1 then
-            skynet.error(string.format("[%s][在阶段send_frame这里耗时]: %s", os.date("%Y-%m-%d %H:%M:%S", skynet_time()), self.fd))
+            skynet.error(string.format("[%s][在阶段send_frame这里耗时]: %s", os.date("%Y-%m-%d %H:%M:%S", et), self.fd))
         end
         self.server_terminated = true
     end
     local fd = self.fd
     if self.fd then
         self.fd = nil
-        local bt = skynet.time()
+        local bt = skynet_time()
         socket.close(fd)
-        local et = skynet.time()
+        local et = skynet_time()
         if (et - bt) > 1 then
-            skynet.error(string.format("[%s][在阶段close这里耗时]: %s", os.date("%Y-%m-%d %H:%M:%S", skynet_time()), self.fd))
+            skynet.error(string.format("[%s][在阶段close这里耗时]: %s", os.date("%Y-%m-%d %H:%M:%S", et), self.fd))
         end
     end
 
