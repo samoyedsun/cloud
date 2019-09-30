@@ -69,21 +69,29 @@ local function request(url, get, post, header, no_reply)
     if post and type(post) == "table" then
         local data = {}
         for k,v in pairs(post) do
-            local k = webclient:url_encoding(k)
+            k = webclient:url_encoding(k)
             if type(v) == "table" then
-                local pv = v
-                local pd = {}
-                for k1,v1 in pairs(pv) do
-                    local k1 = webclient:url_encoding(k1)
-                    local v1 = webclient:url_encoding(v1)
-                    
-                    pd[k1] = v1
+                local vd = {}
+                for k1,v1 in pairs(v) do
+                    k1 = webclient:url_encoding(k1)
+                    if type(v1) == "table" then
+                        local vd1 = {}
+                        for k2,v2 in pairs(v1) do
+                            k2 = webclient:url_encoding(k2)
+                            v2 = webclient:url_encoding(v2)
+                            print(k2, type(v2) == "str")
+                            vd1[k2] = v2
+                        end
+                        v1 = vd1
+                    else
+                        v1 = webclient:url_encoding(v1)
+                    end
+                    vd[k1] = v1
                 end
-                v = pd
+                v = vd
             else
                 v = webclient:url_encoding(v)
             end
-
             data[k] = v
         end   
         post = cjson_encode(data)
