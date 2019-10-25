@@ -21,8 +21,21 @@ linux : PLAT = linux
 macosx : PLAT = macosx
 macosx : SHARED := -fPIC -dynamiclib -Wl,-undefined,dynamic_lookup
 
+TLS_MODULE=ltls
+TLS_LIB= /usr/local/opt/openssl/lib
+TLS_INC= /usr/local/opt/openssl/include
+
 linux macosx : init
-	cd skynet && $(MAKE) $@ && cd .. && $(MAKE) all SHARED="$(SHARED)" PLAT="$(PLAT)"
+	cd skynet && \
+	$(MAKE) \
+		TLS_MODULE="$(TLS_MODULE)" \
+		TLS_LIB="$(TLS_LIB)" \
+		TLS_INC="$(TLS_INC)" \
+		PLAT="$(PLAT)" && \
+	cd .. && \
+	$(MAKE) all \
+		SHARED="$(SHARED)" \
+		PLAT="$(PLAT)"
 	
 CSERVICE = jmlogger
 LUA_CLIB = cjson lfs webclient
