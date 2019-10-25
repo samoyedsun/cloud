@@ -52,13 +52,17 @@
 ```
 
 编译前安装依赖库:
+- macosx
+    ```sh
+    brew install openssl
+    ```
 - ubuntu
     ```sh
-    sudo apt-get install libcurl4-gnutls-dev libreadline-dev autoconf
+    sudo apt-get install libcurl4-gnutls-dev libreadline-dev autoconf libssl-dev
     ```
 - centos
     ```sh
-    sudo yum install libcurl-devel readline-devel autoconf
+    sudo yum install libcurl-devel readline-devel autoconf openssl-devel
     ```
 
 编译:
