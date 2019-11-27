@@ -98,3 +98,12 @@
         cd /usr/local/lib && sudo ln -s ../../lib/libSystem.B.dylib libgcc_s.10.4.dylib
         ```
     - 解决方法来自[这里](http://bugsfixes.blogspot.com/2016/02/mac-ld-library-not-found-for-lgccs104.html)
+
+lua静态检测工具安装
+```sh
+brew install luarocks
+luarocks install luacheck
+
+#测试
+luacheck test.lua
+```
