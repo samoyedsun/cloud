@@ -2,8 +2,8 @@ local skynet = require "skynet"
 local webapp = require "web.app"
 local jproto = require "jproto"
 local proto = require "web.proto"
-local gate = require "gate.backend.request.gate"
-local test = require "gate.backend.request.test"
+local gate = require "server.backend.request.gate"
+local test = require "server.backend.request.test"
 local web_util = require "utils.web_util"
 
 local logger = log4.get_logger("backend")

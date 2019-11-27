@@ -1,7 +1,7 @@
 local skynet = require "skynet"
 require "skynet.manager"
 require "skynet.queue"
-local code = require "code"
+local code = require "server.config.code"
 local logger = log4.get_logger(SERVICE_NAME)
 local mode = ...
 
@@ -31,7 +31,7 @@ if mode == "save" then
     end)
 else
     skynet.start(function()
-        ROOM_SUP_HANDLE = skynet.newservice('gate/service/srv_room_sup')
+        ROOM_SUP_HANDLE = skynet.newservice('server/service/srv_room_sup')
         skynet.dispatch("lua", function(session, _, command, ...)
             local f = CMD[command]
             if not f then

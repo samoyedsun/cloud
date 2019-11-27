@@ -1,7 +1,7 @@
 local skynet = require "skynet"
 require "skynet.manager"
 require "skynet.queue"
-local code = require "code"
+local code = require "server.config.code"
 local logger = log4.get_logger(SERVICE_NAME)
 local mode = ...
 
@@ -29,7 +29,7 @@ local function acquire_service(uid, rid)
         end
     end
     if not c or c.number >= MAX_NUMBER then
-        local handle = skynet.newservice("gate/service/srv_room", "update:"..UPDATE_COUNT)
+        local handle = skynet.newservice("server/service/srv_room", "update:"..UPDATE_COUNT)
         c = {handle = handle, wait_close = false, number = 0}
         table.insert(SERVICE_LIST, c)
     end

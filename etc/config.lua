@@ -2,13 +2,10 @@ skynetroot = "./skynet/"
 cloudroot="./"
 thread = 8
 harbor = 0
-start = "main"  -- main script
+start = "server/main"  -- main script
 bootstrap = "snlua bootstrap"   -- The service for bootstrap
 
-gameservice = cloudroot.."service/?.lua;" ..
-            "./server/?.lua;"..
-            "./test/?.lua"
-
+gameservice = cloudroot.."service/?.lua;" .. "./test/?.lua;" .. "./?.lua"
 luaservice = skynetroot.."service/?.lua;" .. gameservice
 
 lualoader = skynetroot .. "lualib/loader.lua"
@@ -18,7 +15,6 @@ cpath = skynetroot.."cservice/?.so;".. "" ..cloudroot.."cservice/?.so"
 
 lua_path = skynetroot .. "lualib/?.lua;" ..
             -- skynetroot .. "lualib/compat10/?.lua;" ..
-            cloudroot .. "server/?.lua;" ..
             cloudroot .. "lualib/?.lua;"..
             cloudroot .. "lualib/rpc/?.lua;".. 
             "./test/?.lua;" ..

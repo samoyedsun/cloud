@@ -1,6 +1,6 @@
 local skynet = require "skynet"
 local webapp = require "web.app"
-local wsapp = require "gate.frontend.wsapp"
+local wsapp = require "server.frontend.wsapp"
 local jproto = require "jproto"
 local proto = require "web.proto"
 local web_util = require "utils.web_util"

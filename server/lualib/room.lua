@@ -1,4 +1,4 @@
-local code = require "code"
+local code = require "server.config.code"
 local room = {}
 
 function room:new(opt)

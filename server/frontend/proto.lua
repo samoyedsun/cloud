@@ -2,9 +2,9 @@ local skynet = require "skynet"
 local proto = require "socket.proto"
 local sproto = require "sproto"
 local etcd = require "etcd"
-local code = require "code"
+local code = require "server.config.code"
 local jproto = require "jproto"
-local user = require "gate.frontend.request.user"
+local user = require "server.frontend.request.user"
 
 
 -- local host = sproto.parse(gate_proto.c2s):host "package"

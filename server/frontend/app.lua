@@ -1,8 +1,8 @@
 local skynet = require "skynet"
 local app = require "socket.app"
-local proto = require "gate.frontend.proto"
-local code = require "code"
-local session_class = require "gate.lualib.session"
+local proto = require "server.frontend.proto"
+local code = require "server.config.code"
+local session_class = require "server.lualib.session"
 local logger = log4.get_logger("app")
 
 app.use("^c2s$", proto.c2s_process)

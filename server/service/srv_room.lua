@@ -1,7 +1,7 @@
 local skynet = require "skynet"
 require "skynet.queue"
-local room = require "gate.lualib.room"
-local code = require "code"
+local room = require "server.lualib.room"
+local code = require "server.config.code"
 
 local logger = log4.get_logger(SERVICE_NAME)
 local CS = skynet.queue()

@@ -1,6 +1,6 @@
 local skynet = require "skynet"
-local proto = require "gate.frontend.proto"
-local app = require "gate.frontend.app"
+local proto = require "server.frontend.proto"
+local app = require "server.frontend.app"
 local websocket = require "websocket"
 local logger = log4.get_logger("websocket")
 
