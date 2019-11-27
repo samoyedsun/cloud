@@ -15,17 +15,12 @@ skynet.start(function ()
     skynet.name(".logon", handle)
     local handle = skynet.uniqueservice("server/service/srv_voice")
     skynet.name(".voice", handle)
-
-    local env = skynet.getenv("env")
-    local config = require('etc.' .. env .. ".server")
-    local backend_port = config.backend.port
-    local frontend_port = config.frontend.port
-
     local handle = hotfix.start_hotfix_service("skynet", "server/service/srv_room_sup_proxy")
     skynet.name(".room", handle)    
 
-    hotfix.start_hotfix_service("skynet", "srv_web", backend_port, "server.backend.webapp", 65536)
-    hotfix.start_hotfix_service("skynet", "srv_web", frontend_port, "server.frontend.webapp", 65536 * 2)
+    local config = require('etc.' .. skynet.getenv("env") .. ".server")
+    hotfix.start_hotfix_service("skynet", "srv_web", config.backend.port, "server.backend.webapp", 65536)
+    hotfix.start_hotfix_service("skynet", "srv_web", config.frontend.port, "server.frontend.webapp", 65536 * 2)
 
     local maxclient = 30000
     local socket = config.frontend.socket
