@@ -1,42 +1,55 @@
 local skynet = require "skynet"
 local webapp = require "web.app"
 local jproto = require "jproto"
-local proto = require "web.proto"
-local gate = require "server.backend.request.gate"
-local test = require "server.backend.request.test"
+local webproto = require "web.proto"
+local gate = require "server.backend.request.web_gate"
+local room = require "server.backend.request.web_room"
 local web_util = require "utils.web_util"
-
-local logger = log4.get_logger("backend")
+local logger = log4.get_logger("server_backend_webapp")
 web_util.set_logger(logger)
 
-local proto = proto:new(jproto.host)
+local webproto = webproto:new(jproto.host)
 
-proto:use("^error$", function ( ... )
+webproto:use("error", function ( ... )
     print(...)
     return false
 end)
 
-proto:use("^gate_*", function (req, name, args, res)
-    if gate[name] then
-        local r = gate[name](req, args)
-        table.merge(res, r)
-    end
+webproto:use(".*", function (req, name, args, res)
+    table.merge(res, { test = "is test rpc ", msg = "hello world"})
     return true
 end)
 
-proto:use("^test_*", function (req, name, args, res)
-    if test[name] then
-        local r = test[name](req, args)
-        table.merge(res, r)
-    end
+webproto:before(".*", web_util.before_log)
+webproto:after(".*", web_util.after_log)
+
+--------------------------------------------------------------
+webapp.before(".*", function (req, res)
+    res.headers["Access-Control-Allow-Origin"] = "*"
+    res.headers["Access-Control-Allow-Methods"] = "*"
+    res.headers["Access-Control-Allow-Credentials"] = "true"
+    return true
+end)
+webapp.before(".*", function(req, res)
+    logger.debug("before web req %s body %s", tostring(req.url), tostring(req.body))
     return true
 end)
 
--- proto:before(".*", web_util.before_log)
--- proto:after(".*", web_util.after_log)
-
+webapp.use("^/room/:name$",function (req, res)
+    res:json(room.request(req))
+    return true
+end)
+webapp.use("^/gate/:name$", function (req, res)
+    res:json(gate.request(req))
+    return true
+end)
 webapp.post("^/jproto$", function ( ... ) 
-    proto:process(...) 
+    webproto:process(...) 
+end)
+
+webapp.after(".*", function(req, res)
+    logger.debug("after web req %s body %s res body %s", tostring(req.url), tostring(req.body), tostring(res.body))
+    return true
 end)
 
 return webapp

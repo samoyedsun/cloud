@@ -1,8 +1,8 @@
 local skynet = require "skynet"
-local proto = require "server.frontend.proto"
-local app = require "server.frontend.app"
+local socketproto = require "server.frontend.socketproto"
+local socketapp = require "server.frontend.socketapp"
 local websocket = require "websocket"
-local logger = log4.get_logger("websocket")
+local logger = log4.get_logger("server_frontend_wsapp")
 
 local CMD = {}
 local SOCKET_TO_CLIENT = {}
@@ -24,26 +24,11 @@ function CMD.emit(fd, ...)
     client:emit(...)
 end
 
--- 离线请求
-function CMD.s2c_request_offline(session, name, msg)
-    session = session or {}
-    session.agent = skynet.self()
-    app.emit(session, "s2c_request_offline", name, msg)
-end
-
--- 系统广播
-function CMD.s2c_broadcast(name, msg)
-    for _, client in pairs(SOCKET_TO_CLIENT) do
-        client:emit("s2c", name, msg)
-    end
-end
-
 function CMD.info()
     for k, v in pairs(SOCKET_TO_CLIENT) do 
         logger.info("fd %s to client session %s", k, tostring(v.session))
     end
 end
-
 
 function CMD.exit()
     for k, v in pairs(SOCKET_TO_CLIENT) do 
@@ -56,9 +41,8 @@ for cmd, p in pairs(CMD) do
     add_web_agent_cmd(cmd, p)
 end
 
-
 --- overide 重载 send_package
-function proto.send_package(fd, package)
+function socketproto.send_package(fd, package)
     local client = SOCKET_TO_CLIENT[fd] 
     if not client or not client.session or not client.session.ws then
         return false, "close"
@@ -72,21 +56,27 @@ function proto.send_package(fd, package)
     return ok, reason
 end
 
-
 -- websocket回调方法
 local handler = {}
 
 function handler.on_open(ws)
-    skynet.error(string.format("Client connected: %s", ws.addr))
+    logger.info("[ws on_open]: %s | %s | %s | %s", ws.fd, ws.client_terminated, ws.server_terminated, ws.addr)
     local fd = ws.fd
-    local client = app:new()
+    local client = socketapp:new()
     SOCKET_TO_CLIENT[fd] = client
     local ip = ws.addr:match("([^:]+):?(%d*)$")
-    local session = {ws = ws, fd = fd, agent = skynet.self(), addr = ws.addr, ip = ip}
+    local session = {
+        ws = ws,
+        fd = fd,
+        agent = skynet.self(),
+        addr = ws.addr,
+        ip = ip
+    }
     client:emit("start", session)
 end
 
 function handler.on_message(ws, msg)
+    logger.info("[ws on_message]: %s | %s | %s | %s", ws.fd, ws.client_terminated, ws.server_terminated, ws.addr)
     local fd = ws.fd
     local client =  SOCKET_TO_CLIENT[fd]
     if not client then
@@ -95,8 +85,9 @@ function handler.on_message(ws, msg)
     client:emit("c2s", msg, #msg)
 end
 
-function handler.on_error(ws, msg)
+function handler.on_error(ws, error)
     local fd = ws.fd
+    logger.info("[ws on_error]: %s | %s | %s | %s | error:%s", fd, ws.client_terminated, ws.server_terminated, ws.addr, error)
     local client =  SOCKET_TO_CLIENT[fd]
     if not client then
         return
@@ -106,6 +97,7 @@ function handler.on_error(ws, msg)
 
 function handler.on_close(ws, fd, code, reason)
     fd = fd or ws.fd
+    logger.info("[ws on_close]: %s | %s | %s | %s | code:%s | reason:%s", fd, ws.client_terminated, ws.server_terminated, ws.addr, type(code), type(reason))
     local client =  SOCKET_TO_CLIENT[fd]
     if not client then
         return

@@ -1,54 +1,65 @@
 local skynet = require "skynet"
-local webapp = require "web.app"
-local wsapp = require "server.frontend.wsapp"
 local jproto = require "jproto"
-local proto = require "web.proto"
+local webapp = require "web.app"
+local webproto = require "web.proto"
 local web_util = require "utils.web_util"
-
-local logger = log4.get_logger("frontend")
+local wsapp = require "server.frontend.wsapp"
+local user = require "server.frontend.request.web_user"
+local logger = log4.get_logger("server_frontend_webapp")
 web_util.set_logger(logger)
 
-local proto = proto:new(jproto.host)
+local webproto = webproto:new(jproto.host)
 
-proto:use("^error$", function ( ... )
+webproto:use("error", function ( ... )
     print(...)
     return false
 end)
 
-proto:use(".*", function (req, name, args, res)
+webproto:use(".*", function (req, name, args, res)
     table.merge(res, { test = "is test rpc ", msg = "hello world"})
     return true
 end)
 
-proto:before(".*", web_util.before_log)
-proto:after(".*", web_util.after_log)
+webproto:before(".*", web_util.before_log)
+webproto:after(".*", web_util.after_log)
 
-webapp.after(".*", function (req, res)
+--------------------------------------------------------------
+webapp.before(".*", function (req, res)
     res.headers["Access-Control-Allow-Origin"] = "*"
     res.headers["Access-Control-Allow-Methods"] = "*"
     res.headers["Access-Control-Allow-Credentials"] = "true"
+    return true
+end)
+webapp.before(".*", function(req, res)
+    logger.debug("before web req %s body %s", tostring(req.url), tostring(req.body))
+    return true
 end)
 
-webapp.post("^/voice$", function (req, res)
-    local url = skynet.call(".voice", "lua", "post",req.query, req.body)
-    res:json({code = 200, url = url})
-    return false
+webapp.use("^/game/:name$",function (req, res)
+    res:json(game.request(req))
+    return true
+end)
+webapp.use("^/gate/:name$", function (req, res)
+    res:json(gate.request(req))
+    return true
+end)
+webapp.use("^/user/:name$", function (req, res)
+    res:json(user.request(req))
+    return true
 end)
 
-webapp.get("^/voice$", function (req, res)
-    res.headers['Content-Type'] ='application/octet-stream'
-    local voice = skynet.call(".voice", "lua", 'get', req.query)
-    res.body = voice
-    return false
+webapp.post("^/jproto$", function ( ... )
+    webproto:process(...)
 end)
-
-webapp.post("^/jproto$", function ( ... ) 
-    proto:process(...) 
-end)
-
-
 webapp.use("^/ws$", function (...)
     wsapp.process(...)
 end)
+
+webapp.after(".*", function(req, res)
+    logger.debug("after web req %s body %s res body %s", tostring(req.url), tostring(req.body), tostring(res.body))
+    return true
+end)
+
+webapp.static("^/static/*", "./server/")
 
 return webapp

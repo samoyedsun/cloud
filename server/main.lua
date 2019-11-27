@@ -36,7 +36,7 @@ skynet.start(function ()
             maxclient = maxclient,
             nodelay = true,
         },
-        "server.frontend.app"
+        "server.frontend.socketapp"
     )
 
     skynet.exit()
