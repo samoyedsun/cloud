@@ -18,9 +18,8 @@ skynet.start(function ()
 
     local env = skynet.getenv("env")
     local config = require('etc.' .. env .. ".server")
-    local backend_port = config.etcdcf.backend.port
-    local frontend_port = config.etcdcf.frontend.port
-    skynet.setenv("gate_etcd", config.etcdfile)
+    local backend_port = config.backend.port
+    local frontend_port = config.frontend.port
 
     local handle = hotfix.start_hotfix_service("skynet", "server/service/srv_room_sup_proxy")
     skynet.name(".room", handle)    
@@ -29,7 +28,7 @@ skynet.start(function ()
     hotfix.start_hotfix_service("skynet", "srv_web", frontend_port, "server.frontend.webapp", 65536 * 2)
 
     local maxclient = 30000
-    local socket = config.etcdcf.frontend.socket
+    local socket = config.frontend.socket
     local handle = hotfix.start_hotfix_service("skynet","srv_socket")
     skynet.call(handle, "lua", "start", 
         {

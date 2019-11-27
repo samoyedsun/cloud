@@ -13,7 +13,7 @@ function CMD.post(msg, voice)
     local timestamp = skynet_time()
     local file = string.format("%s%s%s%s", math.random(1000, 9000), uid, rid, timestamp)
     FILE_TO_VOICE[file] = voice
-    local frontend = config.etcdcf.frontend
+    local frontend = config.frontend
     local url = string.format("http://%s:%s/voice?file=%s", frontend.ip, frontend.port, file)
     local req = { url = url, second = msg.second, uid = uid, rid = rid}
     local timeout = 30 * 100 -- 30s

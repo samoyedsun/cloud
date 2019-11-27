@@ -35,7 +35,6 @@ end)
 app.use("^start$", function (self, _name, options)
     local session = session_class:new(options)
     self.session = session
-    session.nodename = skynet.getenv("gate_etcd")
     if session.gate then
         skynet.call(session.gate, "lua", "forward", session.fd)     -- 告诉gate，把socket消息发到agent中来
     end
