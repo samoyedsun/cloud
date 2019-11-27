@@ -20,7 +20,7 @@ skynet.start(function ( )
     skynet.call(handle, "lua", "mkdir", "/mj/agents")
 
     local env = skynet.getenv("env")
-    local config = require('config.' .. env .. ".node")
+    local config = require('etc.' .. env .. ".node")
     local backend_port = config.etcdcf.backend.port
     local frontend_port = config.etcdcf.frontend.port
 

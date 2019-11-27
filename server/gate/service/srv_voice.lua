@@ -37,7 +37,7 @@ end
 
 skynet.start(function() 
     local env = skynet.getenv("env")
-    config = require('config.' .. env .. ".gate")
+    config = require('etc.' .. env .. ".gate")
     skynet.dispatch("lua", function(session, _, command, ...)
         local f = CMD[command]
         if not f then

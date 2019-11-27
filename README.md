@@ -28,9 +28,8 @@
 集成库
 ---
 - cjson
-- [dpull的webclient](https://github.com/dpull/lua-webclient)
 - lfs
-- websocket
+- [websocket](https://github.com/dpull/lua-webclient)
 
 目录说明
 ---
@@ -39,7 +38,7 @@
 ├── cservice                skynet cservice
 ├── doc                     文档
 ├── etc                     skynet进程启动配置文件
-├── examples            
+├── server                  示例
 ├── logs                    日志目录
 ├── luaclib                 lua c语言模块
 ├── lualib                  lua模块代码
@@ -74,16 +73,15 @@
     ```sh
     make macosx
     ```
+
 启动命令：
 ```sh
 ./bin/start.sh
 ```
-
-后台运行，选择test环境启动
+后台运行
 ```sh
-./bin/start.sh -v test -D
+./bin/start.sh -D
 ```
-
 热更新命令：
 ```sh
 ./bin/start.sh -U
@@ -100,8 +98,3 @@
         cd /usr/local/lib && sudo ln -s ../../lib/libSystem.B.dylib libgcc_s.10.4.dylib
         ```
     - 解决方法来自[这里](http://bugsfixes.blogspot.com/2016/02/mac-ld-library-not-found-for-lgccs104.html)
-- 怎样跨节点rpc调用?
-    - 参照doc/node_rpc_gate.txt相关文档和代码
-- 怎样添加一个客户端网络长链接请求？
-- 怎样添加一个客户端短链接请求处理？
-- 怎样给长链接推送消息？

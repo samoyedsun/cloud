@@ -81,7 +81,7 @@ webapp.get("^/image", function (req, res)
     return true
 end)
 
-webapp.static("^/static/*", "./examples/node/")
+webapp.static("^/static/*", "./server/node/")
 
 webapp.before(".*", function (req, res)
     res.headers["Access-Control-Allow-Origin"] = "*"

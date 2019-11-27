@@ -6,19 +6,19 @@ start = "main"  -- main script
 bootstrap = "snlua bootstrap"   -- The service for bootstrap
 
 gameservice = cloudroot.."service/?.lua;" ..
-            "./examples/?.lua;"..
+            "./server/?.lua;"..
             "./test/?.lua"
 
 luaservice = skynetroot.."service/?.lua;" .. gameservice
 
 lualoader = skynetroot .. "lualib/loader.lua"
-preload = "./examples/preload.lua"   -- run preload.lua before every lua service run
+preload = "./etc/preload.lua"   -- run preload.lua before every lua service run
 snax = gameservice
 cpath = skynetroot.."cservice/?.so;".. "" ..cloudroot.."cservice/?.so" 
 
 lua_path = skynetroot .. "lualib/?.lua;" ..
             -- skynetroot .. "lualib/compat10/?.lua;" ..
-            cloudroot .. "examples/?.lua;" ..
+            cloudroot .. "server/?.lua;" ..
             cloudroot .. "lualib/?.lua;"..
             cloudroot .. "lualib/rpc/?.lua;".. 
             "./test/?.lua;" ..

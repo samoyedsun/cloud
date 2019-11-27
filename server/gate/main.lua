@@ -17,7 +17,7 @@ skynet.start(function ()
     skynet.name(".voice", handle)
 
     local env = skynet.getenv("env")
-    local config = require('config.' .. env .. ".gate")
+    local config = require('etc.' .. env .. ".gate")
     local backend_port = config.etcdcf.backend.port
     local frontend_port = config.etcdcf.frontend.port
     skynet.setenv("gate_etcd", config.etcdfile)
