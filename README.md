@@ -29,7 +29,7 @@
 ---
 - cjson
 - lfs
-- [websocket](https://github.com/dpull/lua-webclient)
+- websocket
 
 目录说明
 ---

@@ -38,7 +38,7 @@ linux macosx : init
 		PLAT="$(PLAT)"
 	
 CSERVICE = jmlogger
-LUA_CLIB = cjson lfs webclient
+LUA_CLIB = cjson lfs
 
 
 $(LUA_CLIB_PATH) :
@@ -57,9 +57,6 @@ $(LUA_CLIB_PATH)/cjson.so : lualib-src/lua-cjson/lua_cjson.c lualib-src/lua-cjso
 
 $(LUA_CLIB_PATH)/lfs.so : lualib-src/luafilesystem/src/lfs.c lualib-src/luafilesystem/src/lfs.h
 	cd lualib-src/luafilesystem/ && $(MAKE) $(PLAT) && $(MAKE) install
-
-$(LUA_CLIB_PATH)/webclient.so: lualib-src/lua-webclient/webclient.c 
-	$(CC) $(CFLAGS) $(SHARED) $< -o $@ -I$(SKYNET_INC) -lcurl
 
 $(CSERVICE_PATH)/jmlogger.so : service-src/service_logger.c | $(CSERVICE_PATH) 
 	$(CC) $(CFLAGS) $(SHARED) $< -o $@ -I$(SKYNET_INC)

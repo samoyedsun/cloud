@@ -5,6 +5,7 @@ local webproto = require "web.proto"
 local web_util = require "utils.web_util"
 local wsapp = require "server.frontend.wsapp"
 local user = require "server.frontend.request.web_user"
+local common_conf = require "server.config.common_conf"
 local logger = log4.get_logger("server_frontend_webapp")
 web_util.set_logger(logger)
 
@@ -35,14 +36,6 @@ webapp.before(".*", function(req, res)
     return true
 end)
 
-webapp.use("^/game/:name$",function (req, res)
-    res:json(game.request(req))
-    return true
-end)
-webapp.use("^/gate/:name$", function (req, res)
-    res:json(gate.request(req))
-    return true
-end)
 webapp.use("^/user/:name$", function (req, res)
     res:json(user.request(req))
     return true
@@ -60,6 +53,10 @@ webapp.after(".*", function(req, res)
     return true
 end)
 
-webapp.static("^/static/*", "./server/")
+if skynet.getenv("env") == common_conf.ENV_TYPE_PROD then
+    webapp.static("^/static/img/*", "./server/")
+else
+    webapp.static("^/static/*", "./server/")
+end
 
 return webapp

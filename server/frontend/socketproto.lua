@@ -18,27 +18,12 @@ socketproto.c2s_before(".*", function (self, name, args, res)
         return true
     end
     create_timeout(3 * 100, function(s) self:emit("kick") end)
-    table.merge(res, {code = code.ERROR_NOT_AUTH, err = code.ERROR_NOT_AUTH_MSG})
+    table.merge(res, {code = code.ERROR_USER_UNAUTH, err = code.ERROR_USER_UNAUTH_MSG})
     return false
 end)
 
 socketproto.c2s_use("^user_*", function (self, name, args, res)
     table.merge(res, user.request(self, name, args))
-    return true
-end)
-
-socketproto.c2s_use("^room_*", function (self, name, args, res)
-    table.merge(res, room.request(self, name, args))
-    return true
-end)
-
-socketproto.c2s_use("^game_*", function (self, name, args, res)
-    table.merge(res, game.request(self, name, args))
-    return true
-end)
-
-socketproto.c2s_use("^club_*", function (self, name, args, res)
-    table.merge(res, club.request(self, name, args))
     return true
 end)
 

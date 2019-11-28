@@ -14,6 +14,9 @@ function REQUEST:user_auth(msg)
         type(platform) ~= "string" then
         return {code = code.ERROR_CLIENT_PARAMETER_TYPE, err = code.ERROR_CLIENT_PARAMETER_TYPE_MSG}
     end
+
+    self.session.auth = true
+    self.session.uid = uid
     return {code = code.SUCCEED, err = code.SUCCEED_MSG}
 end
 
@@ -22,6 +25,13 @@ function REQUEST:user_info(msg)
     if type(uid) ~= "number" then
         return {code = code.ERROR_CLIENT_PARAMETER_TYPE, err = code.ERROR_CLIENT_PARAMETER_TYPE_MSG}
     end
+    local data = {
+        uid = self.session.uid,
+        fd = self.session.fd,
+        agent = self.session.agent,
+        addr = self.session.addr,
+        ip = self.session.ip
+    }
     return {code = code.SUCCEED, err = code.SUCCEED_MSG, data = data}
 end
 
