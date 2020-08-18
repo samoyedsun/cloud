@@ -34,7 +34,7 @@ do
             export ENV='"'$OPTARG'"'
             ;;
         U)
-            echo 'start srv_hotfix update' | nc 127.0.0.1 8900
+            echo 'start srv_hotfix update' | nc 127.0.0.1 8903
             exit 0;
             ;;
 
