@@ -3,7 +3,6 @@ local jproto = require "jproto"
 local webapp = require "web.app"
 local webproto = require "web.proto"
 local web_util = require "utils.web_util"
-local wsapp = require "server.frontend.wsapp"
 local user = require "server.frontend.request.web_user"
 local common_conf = require "server.config.common_conf"
 local logger = log4.get_logger("server_frontend_webapp")
@@ -43,9 +42,6 @@ end)
 
 webapp.post("^/jproto$", function ( ... )
     webproto:process(...)
-end)
-webapp.use("^/ws$", function (...)
-    wsapp.process(...)
 end)
 
 webapp.after(".*", function(req, res)

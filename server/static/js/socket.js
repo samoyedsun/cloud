@@ -94,7 +94,7 @@ window.Socket = function () {
         ws.onmessage = function (event) {
             self.emit("onmessage", event);
             var data = event.data;
-            var args = self.dispatch(data, data.length);
+            var args = self.dispatch(data);
             var type = args.type;
             if (type == "REQUEST") {
                 self.emit(args.name, args.args);
@@ -128,9 +128,7 @@ window.Socket = function () {
         this.ws.send(data);
     }
 
-    this.dispatch = function (binaryData, sz) {
-        var uint8Array = new Uint8Array(binaryData);
-        var strData = this.Utf8ArrayToStr(uint8Array);
+    this.dispatch = function (strData) {
         var data = proto.dispatch(strData, strData.length);
         if (data.type == "REQUEST") {
             var name = data.name
@@ -149,40 +147,5 @@ window.Socket = function () {
             console.log("ws req name:", name, ", data:", JSON.stringify(args));
             return data
         })()
-    }
-
-    this.Utf8ArrayToStr = function(array) {
-        var out, i, len, c;
-        var char2, char3,char4;
-
-        out = "";
-        len = array.length;
-        i = 0;
-        while(i < len) {
-            c = array[i++];
-            var pre = (c >> 3);
-            if(pre >=0 && pre <= 15){// 0xxxxxxx
-                out += String.fromCharCode(c);
-            }else if(pre >=24 && pre <= 27){// 110x xxxx   10xx xxxx
-                char2 = array[i++];
-                out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
-            }else if(pre >= 28 && pre <= 29){// 1110 xxxx  10xx xxxx  10xx xxxx
-                char2 = array[i++];
-                char3 = array[i++];
-                out += String.fromCharCode(((c & 0x0F) << 12) |
-                       ((char2 & 0x3F) << 6) |
-                       ((char3 & 0x3F) << 0));
-            }else if(pre == 30){//1111 0xxx  10xx xxxx  10xx xxxx 10xx xxxx
-                char2 = array[i++];
-                char3 = array[i++];
-                char4 = array[i++];
-                out += String.fromCodePoint(
-                        ((c & 0x07) << 15) |
-                       ((char2 & 0x3F) << 12) |
-                       ((char3 & 0x3F) << 6) |
-                       ((char4 & 0x3F) << 0));              
-            }
-        }
-        return out;
     }
 }

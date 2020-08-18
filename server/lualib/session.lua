@@ -2,8 +2,7 @@ local session = {}
 
 function session:new(data)
     local o = {
-        fd      = nil, 
-        ws      = nil,
+        fd      = nil,
         gate    = nil,
         agent   = nil,
         addr    = nil,
@@ -15,11 +14,7 @@ function session:new(data)
 end
 
 function session:totable()
-    local ws = nil
-    if self.ws then
-        ws = true
-    end
-    local t = {fd = self.fd, gate = self.gate, agent = self.agent, addr = self.addr, ws = ws}
+    local t = {fd = self.fd, gate = self.gate, agent = self.agent, addr = self.addr, ip = self.ip}
 end
 
 function session:tostring()

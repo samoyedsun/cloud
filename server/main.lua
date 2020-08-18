@@ -21,6 +21,8 @@ skynet.start(function ()
     local config = require('etc.' .. skynet.getenv("env") .. ".server")
     hotfix.start_hotfix_service("skynet", "srv_web", config.backend.port, "server.backend.webapp", 65536)
     hotfix.start_hotfix_service("skynet", "srv_web", config.frontend.port, "server.frontend.webapp", 65536 * 2)
+    
+    hotfix.start_hotfix_service("skynet", "srv_websocket", 9948, "server.frontend.wsapp", "ws")
 
     local maxclient = 30000
     local socket = config.frontend.socket

@@ -59,25 +59,12 @@ socketapp.use("^kick$", function (self)
     if not session then
         return
     end
-    logger.debug("kick session:%s", session:tostring())
-    skynet.fork(function ( ... )
-        if session.ws then
-            session.ws:close()
-        end
-    end)
-end)
-
-socketapp.use("^shut$", function (self)
-    local session = self.session
-    if not session then
+    logger.debug("kick session:%s", tostring(session:totable()))
+    if session.gate then
+        skynet.call(session.gate, "lua", "kick", session.fd)
         return
     end
-    logger.debug("shut session:%s", session:tostring())
-    skynet.fork(function ( ... )
-        if session.ws then
-            session.ws:close()
-        end
-    end)
+    self:close(session.fd, "kick")
 end)
 
 return socketapp
