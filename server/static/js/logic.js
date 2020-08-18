@@ -1,5 +1,4 @@
-var WEBSOCKETGAMESERVERHOST = "localhost:9948"
-var WEBGAMESERVERHOST = "localhost:8203"
+console.log("document.domain:", document.domain)
 
 var uid = 10000000
 var token = "76491a8d530c11f397789e45bb7c5237a67f185e"
@@ -15,7 +14,7 @@ function user_local_login(){
             }
         }
     }
-    xhr.open('POST', "http://" + WEBGAMESERVERHOST + "/user/local_login", true );
+    xhr.open('POST', "http://" + document.domain + ":8203" + "/user/local_login", true );
     var data = JSON.stringify({
         uid : uid,
         token : token
@@ -25,7 +24,7 @@ function user_local_login(){
 
 function user_info(){
     var socket = new Socket();
-    socket.connect("ws://" + WEBSOCKETGAMESERVERHOST + "/ws");
+    socket.connect("ws://" + document.domain + ":9948" + "/ws");
     socket.on("onopen", function () {
         socket.request("user_auth", {
             uid : uid,
