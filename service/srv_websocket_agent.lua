@@ -31,11 +31,13 @@ end
 
 function CMD.socket(fd, protocol, addr)
     SOCKET_NUMBER = SOCKET_NUMBER + 1
+    skynet.error("change socket number:", SOCKET_NUMBER, ", fd:", fd)
     local ok, err = websocket.accept(fd, handle, protocol, addr)
     if not ok then
-        print(err)
+        skynet.error("on websocket accept, error:", err, ", fd:", fd)
     end
     SOCKET_NUMBER = SOCKET_NUMBER - 1
+    skynet.error("change socket number:", SOCKET_NUMBER, ", fd:", fd)
 end
 
 skynet.start(function ()

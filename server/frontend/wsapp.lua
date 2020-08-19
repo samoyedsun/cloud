@@ -111,9 +111,8 @@ function handle.close(fd, code, reason)
     CMD.close(fd, reason)
 end
 
-function handle.error(id)
+function handle.error(fd)
     skynet.error(string.format("ws error from: %s", tostring(fd)))
-    local fd = ws.fd
     local client = SOCKET_TO_CLIENT[fd]
     if not client then
         return

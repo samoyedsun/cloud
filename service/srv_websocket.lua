@@ -16,7 +16,7 @@ function CMD.update()                           -- 热更新
     local new_agent = {}
     update_count = update_count + 1             -- 更新次数
     for i = 1, agent_num do 
-        new_agent[i] = skynet.newservice("srv_web_agent", webapp_name, body_size_limit, "update:"..update_count)
+        new_agent[i] = skynet.newservice("srv_websocket_agent", wsapp_name)
     end
     
     agent = new_agent
