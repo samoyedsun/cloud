@@ -11,25 +11,20 @@
 |标题|网址|
 |-|-|
 |服务端框架skynet|https://github.com/cloudwu/skynet/wiki|
-|skynet学习资源|http://skynetclub.github.io/skynet/resource.html|
-|云风的演讲视频|http://gad.qq.com/content/coursedetail?id=467|
 |云风的blog|https://blog.codingnow.com/|
 
-本框架解决了以下问题
+本框架解决的问题
 ---
 - 服务器热更新
 - log4日志服务功能
 - web服务功能
-- 服务注册与发现功能
 - 基于http协议，消息序列化和反序列化基于json的rpc功能
 - mysql和redis代理功能
-- websocket
 
 集成库
 ---
 - cjson
 - lfs
-- websocket
 
 目录说明
 ---
@@ -38,7 +33,7 @@
 ├── cservice                skynet cservice
 ├── doc                     文档
 ├── etc                     skynet进程启动配置文件
-├── server                  示例
+├── server                  服务器逻辑代码示例
 ├── logs                    日志目录
 ├── luaclib                 lua c语言模块
 ├── lualib                  lua模块代码

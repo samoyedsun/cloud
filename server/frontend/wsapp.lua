@@ -122,18 +122,3 @@ function handle.error(id)
 end
 
 return handle
-
---[[
-local root = {}
-
---- http升级协议成websocket协议
-function root.process(req, res)
-    local ok, err = websocket.accept(req.fd, handle, "ws", req.addr)
-    if not ok then
-        skynet.error(string.format("websocket process err: %s", err))
-    end
-    return true
-end
-
-return root
---]]
