@@ -20,11 +20,13 @@
 - web服务功能
 - 基于http协议，消息序列化和反序列化基于json的rpc功能
 - mysql和redis代理功能
+- 跨平台：Windows / Linux / macOS
 
 集成库
 ---
 - cjson
 - lfs
+- sha256
 
 目录说明
 ---
@@ -41,9 +43,21 @@
 ├── run                     进程运行时存放文件目录，比如说进程pid
 ├── service                 skynet服务目录
 ├── service-src             skynet c语言服务代码
-├── skynet                  skynet
-└── test                    测试目录
+├── skynet                  skynet (git submodule)
+├── test                    测试目录
+├── 3rd                     跨平台依赖(posix兼容层, pthread-win32)，仅 Windows 使用
+└── xmake.lua               Windows 构建脚本
 ```
+
+编译
+---
+skynet 以 submodule 的方式引入，**不修改 skynet 的任何源码**。
+Linux / macOS 直接使用系统接口，Windows 通过 `3rd/posix`(POSIX 兼容层 + wepoll
+实现的 epoll) 和 `3rd/pthread-win32` 提供运行环境。
+
+### Linux / macOS
+
+使用项目原有的 Makefile 构建。
 
 编译前安装依赖库:
 - macosx
@@ -69,10 +83,42 @@
     make macosx
     ```
 
-启动命令：
+### Windows
+
+使用 [xmake](https://xmake.io) 构建，需要：
+
+- Visual Studio 2022，并安装 Clang 组件（使用 `clang-cl` 工具链）
+- 安装 xmake，`xmake --version` 能正常输出版本即可
+
+```bat
+xmake f -m release -y
+xmake -y
+xmake install -y
+```
+
+`xmake install` 把产物安装到项目根目录，布局与 `make linux` 一致：
+`skynet\skynet.exe`、`skynet\luaclib\*.so`、`skynet\cservice\*.so`、
+`luaclib\*.so`、`cservice\*.so`。
+
+调试构建：
+
+```bat
+xmake f -m debug -y
+xmake -y
+xmake install -y
+```
+
+启动命令
+---
+Linux / macOS（在项目根目录执行）：
 ```sh
 ./bin/start.sh
 ```
+Windows（在项目根目录执行）：
+```bat
+bin\start.bat
+```
+
 后台运行
 ```sh
 ./bin/start.sh -D
