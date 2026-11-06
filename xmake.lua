@@ -33,8 +33,10 @@ local out_skynet_cservice_dir = path.join(out_skynet_dir, "cservice")
 local out_luaclib_dir = path.join(out_dir, "luaclib")
 local out_cservice_dir = path.join(out_dir, "cservice")
 
--- xmake install 的安装目录: 与 make linux 的布局一致, 可直接在项目根目录运行
-local install_skynet_dir = skynet_dir
+-- xmake install 的安装目录
+-- Windows 加载 DLL 时优先搜索 exe 所在目录, 所以 exe 和它依赖的 dll 必须安装到同一目录
+local install_bin_dir = project_dir
+-- 模块目录与 make linux 的布局一致
 local install_skynet_luaclib_dir = path.join(skynet_dir, "luaclib")
 local install_skynet_cservice_dir = path.join(skynet_dir, "cservice")
 local install_luaclib_dir = path.join(project_dir, "luaclib")
@@ -209,13 +211,13 @@ if is_plat("windows") then
         add_rules("utils.symbols.export_all")
         set_targetdir(out_skynet_dir,
             { libdir = path.relative(lib_dir, out_skynet_dir) })
-    install_to({ install = install_skynet_dir })
+    install_to({ install = install_bin_dir })
     table.insert(cloud_targets, "liblua")
 
     add_binary("lua", path.join(skynet_dir, "3rd/lua/lua.c"), out_skynet_dir, {
         defines = lua_import,
         deps = { "liblua" },
-        install = install_skynet_dir,
+        install = install_bin_dir,
     })
 
     -- POSIX 兼容层(含 wepoll 实现的 epoll)
@@ -227,7 +229,7 @@ if is_plat("windows") then
         add_rules("utils.symbols.export_all")
         set_targetdir(out_skynet_dir,
             { libdir = path.relative(lib_dir, out_skynet_dir) })
-    install_to({ install = install_skynet_dir })
+    install_to({ install = install_bin_dir })
     table.insert(cloud_targets, "libposix")
 
     -- skynet 核心
@@ -241,7 +243,7 @@ if is_plat("windows") then
         add_rules("utils.symbols.export_all")
         set_targetdir(out_skynet_dir,
             { libdir = path.relative(lib_dir, out_skynet_dir) })
-    install_to({ install = install_skynet_dir })
+    install_to({ install = install_bin_dir })
     table.insert(cloud_targets, "libskynet")
 
     add_binary("skynet", path.join(skynet_dir, "skynet-src/skynet_main.c"),
@@ -249,7 +251,7 @@ if is_plat("windows") then
             defines = lua_import,
             forceincludes = unistd_h,
             deps = { "libskynet" },
-            install = install_skynet_dir,
+            install = install_bin_dir,
         })
 
     -- skynet 的 C 模块: skynet.so

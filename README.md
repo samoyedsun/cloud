@@ -96,9 +96,10 @@ xmake -y
 xmake install -y
 ```
 
-`xmake install` 把产物安装到项目根目录，布局与 `make linux` 一致：
-`skynet\skynet.exe`、`skynet\luaclib\*.so`、`skynet\cservice\*.so`、
-`luaclib\*.so`、`cservice\*.so`。
+`xmake install` 把产物安装到项目根目录，模块布局与 `make linux` 一致：
+`skynet.exe`、`lua.exe`、`liblua.dll`、`libposix.dll`、`libskynet.dll` 位于项目根目录
+（Windows 加载 DLL 时先搜索 exe 所在目录，所以 exe 与 dll 必须在同一目录），
+`skynet\luaclib\*.so`、`skynet\cservice\*.so`、`luaclib\*.so`、`cservice\*.so` 位于各自目录。
 
 调试构建：
 

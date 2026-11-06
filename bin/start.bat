@@ -5,7 +5,7 @@ setlocal
 
 rem runtime dir: parent of this script's dir -> project root
 for %%i in ("%~dp0..") do set "ROOT=%%~fi"
-if not exist "%ROOT%\skynet\skynet.exe" (
+if not exist "%ROOT%\skynet.exe" (
     echo [start.bat] skynet.exe not found.
     echo Build and install first:
     echo   xmake f -m release -y
@@ -24,4 +24,4 @@ set ENV="dev"
 if not exist "%ROOT%\run" mkdir "%ROOT%\run"
 
 cd /d "%ROOT%"
-skynet\skynet.exe etc\config.lua
+"%ROOT%\skynet.exe" etc\config.lua
